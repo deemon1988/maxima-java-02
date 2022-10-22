@@ -5,12 +5,7 @@ public class Transport {
     private  String name;
     private int capacity;
     private int speed;
-    public double costOfKm;
-    private double chargeOfFuel;
-    private double costOfFuel = 49.69;
-
-   //costOfKm = chargeOfFuel*costOfFuel/100;
-
+    private double costOfKm;
 
     public Transport(String name, int capacity, int speed, double costOfKm) {
         this.name = name;
@@ -28,7 +23,8 @@ public class Transport {
     }
 
     public float getPrice(City city) {
-        return (float) (city.distance * costOfKm);
+
+        return (float) (city.getDistance() * getCostOfKm());    //обращение к свойству класса не напрямую, а через getter
     }
 
     public String getName() {
