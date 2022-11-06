@@ -1,10 +1,10 @@
 package org.example;
 
-public class City {                     // сделать класс приватным
+public class City {
     private  String name;
     private int distance;
-    boolean hasAirport;
-    boolean isOnWater;
+   private boolean hasAirport;
+    private boolean isOnWater;
 
     public City(String name, int distance, boolean hasAirport, boolean isOnWater) {
         this.name = name;
@@ -19,10 +19,6 @@ public class City {                     // сделать класс прива�
         this.isOnWater = true;
         this.hasAirport = false;
     }
-
-    /*public void printName() {
-       System.out.println("Город: "+getName()+" - "+getDistance()+" километров");
-   }*/
 
 
     public String getName() {

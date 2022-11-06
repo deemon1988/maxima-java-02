@@ -1,11 +1,12 @@
 package org.example;
 
-public class Transport {
+abstract class Transport {
 
     private  String name;
     private int capacity;
     private int speed;
     private double costOfKm;
+
 
     public Transport(String name, int capacity, int speed, double costOfKm) {
         this.name = name;
@@ -14,18 +15,7 @@ public class Transport {
         this.costOfKm = costOfKm;
     }
 
-
-    public void printName() {
-        System.out.println("Транспорт: "+getName());
-        System.out.println("Грузоподъёмность: "+getCapacity()+" Кг");
-        System.out.println("Скорость: "+getSpeed()+" Км/ч");
-        System.out.println("Стоимость за километр: "+getCostOfKm()+" ");
-    }
-
-    public float getPrice(City city) {
-
-        return (float) (city.getDistance() * getCostOfKm());    //обращение к свойству класса не напрямую, а через getter
-    }
+    abstract float getPrice(City city);
 
     public String getName() {
         return name;
@@ -58,6 +48,8 @@ public class Transport {
     public void setCostOfKm(double costOfKm) {
         this.costOfKm = costOfKm;
     }
+
+
 
 
 }

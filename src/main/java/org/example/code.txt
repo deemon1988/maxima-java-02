@@ -1,0 +1,154 @@
+package org.example;
+
+public class App
+{
+    public static void main( String[] args )
+    {
+        City Spb = new City("Санкт-Петербург", 98, true, true);
+        City Murmansk = new City("Мурманск",1400,true, false);
+        City Tver = new City("Тверь", 540);
+        City Mosсow = new City("Москва", 800, true, true);
+
+        Truck trailer_truck = new Truck("Грузовик с полуприцепом", 44000, 90, 50.41f );
+        Ship tanker = new Ship("Танкер",18159000, 27, 300.82f);
+        Plane aircraft = new Plane("Самолёт",120000, 800, 600.68f);
+
+        // System.out.println(aircraft.getPrice(Tver));
+        // System.out.println(tanker.getPrice(Murmansk));
+        // System.out.println(trailer_truck.getPrice(Mosсow));
+
+Logistics abc = new Logistics(tanker, trailer_truck, aircraft);
+aircraft.getPrice(Spb);
+
+abc.getShipping(Spb, 2000, 2);
+        System.out.println(abc.isRepairing());
+//abc.isShippingAvaible(Spb, tanker, trailer_truck, aircraft);
+
+
+}
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+package org.example;
+
+public class Logistics implements Repairable{
+    Transport[] vehicles = new Transport[3];
+
+    Transport[] startRepairVehicles = new Transport[vehicles.length];
+    Transport[] finishRepairVehicles = new Transport[vehicles.length];
+
+    public Logistics(Transport... vehicles) {
+        this.vehicles = vehicles;
+    }
+
+    public Transport[] getVehicles() {
+        return vehicles;
+    }
+
+    public void setVehicles(Transport[] vehicles) {
+        this.vehicles = vehicles;
+    }
+
+
+
+    public Transport getShipping(City city, int weight, int time) {
+       //isShippingAvaible();
+        double spentTime;
+        float stoimosti;
+        float minPrice = vehicles[0].getPrice(city);
+        boolean capacity = false;
+        boolean sTime = false;
+        Transport vehicle = null;
+
+        for (int i = 0; i < vehicles.length; i++) {
+            spentTime = (double)city.getDistance()/vehicles[i].getSpeed();
+            stoimosti = (float) vehicles[i].getCostOfKm() * city.getDistance();
+
+            System.out.println(city.getName() + " " + city.getDistance() + " = " + stoimosti);
+
+            if (spentTime<time) sTime = true;
+            if (vehicles[i].getCapacity()>weight) capacity = true;
+
+            float counter = stoimosti;
+            if (sTime == true && capacity == true && minPrice > counter) {
+                minPrice = counter;
+                vehicle = vehicles[i];
+            }
+
+        }
+        if(isShippingAvaible()) {System.out.println("true+");} else System.out.println("false-");
+
+        System.out.println(vehicle.getName()+" - "+minPrice);
+       return vehicle;
+    }
+    public boolean isShippingAvaible () {
+
+
+      // if (city.isOnWater);
+      // if (city.hasAirport);
+        return isRepairing();
+       // City.getDistance();   // static
+       // System.out.println(vehicles[0].getClass().equals(Ship.class)); //equals
+
+ }
+
+
+    @Override
+    public void startRepair() {
+        startRepairVehicles[0] = vehicles[0];
+    }
+    @Override
+    public void finishRepair() {
+//finishRepairVehicles[0] = vehicles[1];
+    }
+
+    @Override
+    public boolean isRepairing() {
+        startRepair();
+        finishRepair();
+        boolean start = false;
+        boolean finish = false;
+        boolean isRepairing = false;
+        for (int i=0; i< startRepairVehicles.length; i++)
+        {
+            if(startRepairVehicles[i] != null) { start = true;}
+        }
+
+        for (int i=0; i< finishRepairVehicles.length; i++)
+        {
+            if(finishRepairVehicles[i] != null) { finish = true;}
+        }
+for (int i=0; i< vehicles.length; i++){
+    if (startRepairVehicles[i]==finishRepairVehicles[i]&&startRepairVehicles[i]!=null && finishRepairVehicles[i]!= null) {
+        isRepairing = false;
+    }
+}
+
+        if(finish == true && finish != start) { isRepairing = true;}
+
+        return isRepairing;
+    }
+
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+package org.example;
+
+public interface Repairable {
+    void startRepair ();
+    void finishRepair();
+    boolean isRepairing();
+}
