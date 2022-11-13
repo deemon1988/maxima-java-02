@@ -2,7 +2,7 @@ package org.example;
 
 public class App
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws Exception
     {
         City Spb = new City("Санкт-Петербург", 98, true, true);
         City Murmansk = new City("Мурманск",1400,true, false);
@@ -16,9 +16,14 @@ public class App
         Ship kater = new Ship("Катер",1815, 90, 100.82);
 
 
-         copy_Logistics  logistics = new copy_Logistics(tanker, trailer_truck, kater, aircraft);
-         logistics.getShipping(Spb,1900,16);
-        System.out.println();
+         copy_Logistics  logistics = new copy_Logistics(tanker, trailer_truck, kater, aircraft,trailer_truck);
+
+            try{ logistics.getShipping(Mosсow,1900,5);}
+            catch (LogisticsGetShippingException ex) {
+                System.out.println("Нет нужного транспорта");
+            }
+
+            System.out.println();
 
         //TransportCreater transportCreater = new TransportFactory();
        // Transport transport = transportCreater.createTransport().getTransport(Mosсow,1700,3);

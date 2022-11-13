@@ -1,7 +1,7 @@
 package org.example;
 
 public class Logistics implements Repairable{
-    Transport[] vehicles = new Transport[4];
+    Transport[] vehicles;
     public Logistics(Transport... vehicles) {
         this.vehicles = vehicles;
     }
@@ -14,20 +14,21 @@ public class Logistics implements Repairable{
         this.vehicles = vehicles;
     }
 
-    String getIsRepairing = ""; // переиминовать в getIsRepairing
+    String getIsRepairing = "";
     Transport getVehicle;
     Transport getTransport;
 
 
 
-    public Transport getShipping(City city, int weight, int time) {
+    public Transport getShipping(City city, int weight, int time) throws Exception{
+        if (getTransport==null){
+            throw new LogisticsGetShippingException("Нет нужного транспорта");
+        }
         float stoimost=0;
         float minPrice=0 ;
         getVehicle = vehicles[0];
-        // minPrice = vehicles[0].getPrice(city);
         float[] getPrices;
         getPrices = new float[vehicles.length];
-        // minPrice = vehicles[0].getPrice(city);
 
         for (int i = 0; i < vehicles.length; i++) {
             double spentTime=0;
@@ -35,38 +36,29 @@ public class Logistics implements Repairable{
             boolean capacity = false;
             boolean sTime = false;
 
-
             getVehicle = vehicles[i];
             if (isShippingAvaible()==true ) {
-
                 stoimost = vehicles[i].getPrice(city);
-                // if(stoimost!=0 && minPrice==0)minPrice = stoimost;
-                // if(stoimost!=0 && minPrice>stoimost)minPrice = stoimost;
                 getPrices[i]=stoimost;      // массив стоимости доставки
-
             }
             if (stoimost!=0) {                          // почистить код, нужно ли условие  if (stoimost!=0) ?
                 spentTime = (double)city.getDistance()/vehicles[i].getSpeed();
                 itCapacity = vehicles[i].getCapacity();
                 if (spentTime!=0 && spentTime<time) sTime = true;
-                //else { minPrice=0;}
                 if (itCapacity>weight) capacity = true;
-                // else {minPrice=0;}
-                //  if ( minPrice > stoimost && minPrice !=0) minPrice = stoimost;
-
             }
-
             System.out.println(vehicles[i].getName()+" "+spentTime+" "+stoimost);
             if(sTime==true && capacity==true) {  if(stoimost!=0 && minPrice==0)minPrice = stoimost;}
-            if (sTime == true && capacity == true  && stoimost <= minPrice ) {  //&& stoimost <= minPrice
+            if (sTime == true && capacity == true  && stoimost <= minPrice ) {
                 getTransport = vehicles[i];
-                minPrice = stoimost;// minPrice = stoimost
+                minPrice = stoimost;
             }
-            // else { minPrice=0;}
-
         }
         System.out.println();
         System.out.println(getTransport.getName()+" "+getTransport.getPrice(city));
+        if (getTransport==null){
+            throw new LogisticsGetShippingException("Нет нужного транспорта");
+        }
         return getTransport;
     }
 
