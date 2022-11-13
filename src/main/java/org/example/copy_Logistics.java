@@ -1,8 +1,8 @@
 package org.example;
 
-public class Logistics implements Repairable{
+public class copy_Logistics implements Repairable{
     Transport[] vehicles = new Transport[4];
-    public Logistics(Transport... vehicles) {
+    public copy_Logistics(Transport... vehicles) {
         this.vehicles = vehicles;
     }
 
@@ -24,10 +24,10 @@ public class Logistics implements Repairable{
         float stoimost=0;
         float minPrice=0 ;
         getVehicle = vehicles[0];
-        // minPrice = vehicles[0].getPrice(city);
+       // minPrice = vehicles[0].getPrice(city);
         float[] getPrices;
         getPrices = new float[vehicles.length];
-        // minPrice = vehicles[0].getPrice(city);
+       // minPrice = vehicles[0].getPrice(city);
 
         for (int i = 0; i < vehicles.length; i++) {
             double spentTime=0;
@@ -40,8 +40,8 @@ public class Logistics implements Repairable{
             if (isShippingAvaible()==true ) {
 
                 stoimost = vehicles[i].getPrice(city);
-                // if(stoimost!=0 && minPrice==0)minPrice = stoimost;
-                // if(stoimost!=0 && minPrice>stoimost)minPrice = stoimost;
+               // if(stoimost!=0 && minPrice==0)minPrice = stoimost;
+               // if(stoimost!=0 && minPrice>stoimost)minPrice = stoimost;
                 getPrices[i]=stoimost;      // массив стоимости доставки
 
             }
@@ -51,10 +51,10 @@ public class Logistics implements Repairable{
                 if (spentTime!=0 && spentTime<time) sTime = true;
                 //else { minPrice=0;}
                 if (itCapacity>weight) capacity = true;
-                // else {minPrice=0;}
-                //  if ( minPrice > stoimost && minPrice !=0) minPrice = stoimost;
+               // else {minPrice=0;}
+                  //  if ( minPrice > stoimost && minPrice !=0) minPrice = stoimost;
 
-            }
+                }
 
             System.out.println(vehicles[i].getName()+" "+spentTime+" "+stoimost);
             if(sTime==true && capacity==true) {  if(stoimost!=0 && minPrice==0)minPrice = stoimost;}
@@ -62,7 +62,7 @@ public class Logistics implements Repairable{
                 getTransport = vehicles[i];
                 minPrice = stoimost;// minPrice = stoimost
             }
-            // else { minPrice=0;}
+           // else { minPrice=0;}
 
         }
         System.out.println();
