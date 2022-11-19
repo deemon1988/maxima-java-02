@@ -25,9 +25,16 @@ public class App
 
             System.out.println();
 
-        //TransportCreater transportCreater = new TransportFactory();
-       // Transport transport = transportCreater.createTransport().getTransport(Mosсow,1700,3);
-       // System.out.println(transport instanceof Plane);
+
+        TransportFactory factory = new TransportFactory();
+        Transport createTransport = factory.getTransport(Mosсow,1700,3);
+
+
+
+
+
+
+
 
 
 

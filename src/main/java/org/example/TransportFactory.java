@@ -1,28 +1,28 @@
 package org.example;
 
 
-public class TransportFactory implements TransportCreater{
+public class TransportFactory {
 
-
+    Transport newTransport = null;
 
     Transport getTransport(City city, int weight, int hours) {
-        final String SHIP_NAME = "Новый Корабль";
-        final String TRUCK_NAME = "Новый Грузовик";
-        final String PLANE_NAME = "Новый Самолёт";
+        final String SHIP_NAME = "Корабль";
+        final String TRUCK_NAME = "Грузовик";
+        final String PLANE_NAME = "Самолёт";
         final float SHIP_PRICE = 30.05f;
         final float TRUCK_PRICE = 10.03f;
         final float PLANE_PRICE = 50.01f;
-        Transport transport = null;
+        //Transport transport = null;
         int speed;
 
         speed = city.getDistance() / hours;     // скорость с которой должен двигаться транспорт для доставки в срок
-        if (speed < 40 && city.isOnWater()) transport = new Ship(SHIP_NAME, multipleWeight(weight), speed, SHIP_PRICE);
-        if (speed > 120 && city.isHasAirport()) transport = new Plane(PLANE_NAME, multipleWeight(weight), speed, PLANE_PRICE);
-        if (speed > 40 && speed <120) transport = new Truck(TRUCK_NAME, multipleWeight(weight),speed, PLANE_PRICE);
+        if (speed < 40 && city.isOnWater()) newTransport = new Ship(SHIP_NAME, multipleWeight(weight), speed, SHIP_PRICE);
+        if (speed > 120 && city.isHasAirport()) newTransport = new Plane(PLANE_NAME, multipleWeight(weight), speed, PLANE_PRICE);
+        if (speed > 40 && speed <120) newTransport = new Truck(TRUCK_NAME, multipleWeight(weight),speed, PLANE_PRICE);
 
 
-        System.out.println(transport.getName()+" - грузоподъёмность "+transport.getCapacity()+" скорость "+transport.getSpeed());
-        return transport;
+        System.out.println(newTransport.getName()+" - грузоподъёмность "+ newTransport.getCapacity()+" скорость "+ newTransport.getSpeed());
+        return newTransport;
     }
 
 
@@ -42,8 +42,5 @@ public class TransportFactory implements TransportCreater{
 
 
 
-    @Override
-    public TransportFactory createTransport() {
-        return new TransportFactory();
-    }
+
 }

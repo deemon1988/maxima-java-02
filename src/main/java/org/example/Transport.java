@@ -1,6 +1,6 @@
 package org.example;
 
-abstract class Transport {
+abstract class Transport{
 
     private  String name;
     private int capacity;

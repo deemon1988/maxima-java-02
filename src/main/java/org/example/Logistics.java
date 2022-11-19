@@ -21,9 +21,6 @@ public class Logistics implements Repairable{
 
 
     public Transport getShipping(City city, int weight, int time) throws Exception{
-        if (getTransport==null){
-            throw new LogisticsGetShippingException("Нет нужного транспорта");
-        }
         float stoimost=0;
         float minPrice=0 ;
         getVehicle = vehicles[0];
@@ -37,7 +34,7 @@ public class Logistics implements Repairable{
             boolean sTime = false;
 
             getVehicle = vehicles[i];
-            if (isShippingAvaible()==true ) {
+            if (isShippingAvailable()) {
                 stoimost = vehicles[i].getPrice(city);
                 getPrices[i]=stoimost;      // массив стоимости доставки
             }
@@ -47,7 +44,7 @@ public class Logistics implements Repairable{
                 if (spentTime!=0 && spentTime<time) sTime = true;
                 if (itCapacity>weight) capacity = true;
             }
-            System.out.println(vehicles[i].getName()+" "+spentTime+" "+stoimost);
+            System.out.println(vehicles[i].getName()+" "+Math.round(spentTime)+" - "+Math.round(stoimost));
             if(sTime==true && capacity==true) {  if(stoimost!=0 && minPrice==0)minPrice = stoimost;}
             if (sTime == true && capacity == true  && stoimost <= minPrice ) {
                 getTransport = vehicles[i];
@@ -55,27 +52,28 @@ public class Logistics implements Repairable{
             }
         }
         System.out.println();
-        System.out.println(getTransport.getName()+" "+getTransport.getPrice(city));
         if (getTransport==null){
             throw new LogisticsGetShippingException("Нет нужного транспорта");
         }
+        System.out.println(getTransport.getName()+" "+getTransport.getPrice(city));
+
         return getTransport;
     }
 
 
-    private boolean isShippingAvaible () {
-        boolean isAvaible = false;
+    private boolean isShippingAvailable() {
+        boolean isAvailable;
         if(isRepairing())
         {
             // System.out.println("Не Доступен");
-            isAvaible = false;
+            isAvailable = false;
         }
         else
         {
             // System.out.println("Доступен");
-            isAvaible = true;
+            isAvailable = true;
         }
-        return isAvaible;
+        return isAvailable;
     }
 
     @Override
@@ -88,7 +86,7 @@ public class Logistics implements Repairable{
             if (repair[i] != null) isRepair[i] = repair[i];
             if(isRepair[i] == getVehicle.getName()) isTransport = getVehicle.getName(); // getIsRepairing = getVehicle.getName()
         }
-        getIsRepairing = isTransport; // не нужно
+        getIsRepairing = isTransport; // если несколько на ремонте куда записываются ?
     }
 
     @Override
@@ -98,9 +96,10 @@ public class Logistics implements Repairable{
 
     @Override
     public boolean isRepairing() {
-        boolean repairValue = false;
+        boolean repairValue ;
         startRepair();
         if(getIsRepairing == getVehicle.getName()) { repairValue = true;} //на ремонте
+        else repairValue = false;
 
         return repairValue;
     }

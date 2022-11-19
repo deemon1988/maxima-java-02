@@ -1,48 +1,46 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+App.java
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 package org.example;
 
 public class App
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws Exception
     {
         City Spb = new City("Санкт-Петербург", 98, true, true);
         City Murmansk = new City("Мурманск",1400,true, false);
-        City Tver = new City("Тверь", 540);
+        City Tver = new City("Тверь", 540, false, false);
+        City myCity = new City("Город",540);
         City Mosсow = new City("Москва", 800, true, true);
 
-        Truck trailer_truck = new Truck("Грузовик с полуприцепом", 44000, 90, 50.41f );
-        Ship tanker = new Ship("Танкер",18159000, 27, 300.82f);
-        Plane aircraft = new Plane("Самолёт",120000, 800, 600.68f);
+        Truck trailer_truck = new Truck("Грузовик с полуприцепом", 44000, 90, 150.41 );
+        Ship tanker = new Ship("Танкер",18159000, 27, 300.82);
+        Plane aircraft = new Plane("Самолёт",120000, 800, 600.68);
+        Ship kater = new Ship("Катер",1815, 90, 100.82);
 
-        // System.out.println(aircraft.getPrice(Tver));
-        // System.out.println(tanker.getPrice(Murmansk));
-        // System.out.println(trailer_truck.getPrice(Mosсow));
 
-Logistics abc = new Logistics(tanker, trailer_truck, aircraft);
-aircraft.getPrice(Spb);
+         Logistics  logistics = Logistics(tanker, trailer_truck, kater, aircraft,trailer_truck);
 
-abc.getShipping(Spb, 2000, 2);
-        System.out.println(abc.isRepairing());
-//abc.isShippingAvaible(Spb, tanker, trailer_truck, aircraft);
+            try{ logistics.getShipping(Mosсow,1900,5);}
+            catch (LogisticsGetShippingException ex) {
+                System.out.println("Нет нужного транспорта");
+            }
 
+            System.out.println();
+
+    }
 
 }
-}
-
 
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
+Logistics.java
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 package org.example;
 
 public class Logistics implements Repairable{
-    Transport[] vehicles = new Transport[3];
-
-    Transport[] startRepairVehicles = new Transport[vehicles.length];
-    Transport[] finishRepairVehicles = new Transport[vehicles.length];
-
+    Transport[] vehicles;
     public Logistics(Transport... vehicles) {
         this.vehicles = vehicles;
     }
@@ -55,95 +53,113 @@ public class Logistics implements Repairable{
         this.vehicles = vehicles;
     }
 
+    String getIsRepairing = "";
+    Transport getVehicle;
+    Transport getTransport;
 
 
-    public Transport getShipping(City city, int weight, int time) {
-       //isShippingAvaible();
-        double spentTime;
-        float stoimosti;
-        float minPrice = vehicles[0].getPrice(city);
-        boolean capacity = false;
-        boolean sTime = false;
-        Transport vehicle = null;
+
+    public Transport getShipping(City city, int weight, int time) throws Exception{
+        float stoimost=0;
+        float minPrice=0 ;
+        getVehicle = vehicles[0];
+        float[] getPrices;
+        getPrices = new float[vehicles.length];
 
         for (int i = 0; i < vehicles.length; i++) {
-            spentTime = (double)city.getDistance()/vehicles[i].getSpeed();
-            stoimosti = (float) vehicles[i].getCostOfKm() * city.getDistance();
+            double spentTime=0;
+            int itCapacity=0;
+            boolean capacity = false;
+            boolean sTime = false;
 
-            System.out.println(city.getName() + " " + city.getDistance() + " = " + stoimosti);
-
-            if (spentTime<time) sTime = true;
-            if (vehicles[i].getCapacity()>weight) capacity = true;
-
-            float counter = stoimosti;
-            if (sTime == true && capacity == true && minPrice > counter) {
-                minPrice = counter;
-                vehicle = vehicles[i];
+            getVehicle = vehicles[i];
+            if (isShippingAvailable()) {
+                stoimost = vehicles[i].getPrice(city);
+                getPrices[i]=stoimost;      // массив стоимости доставки
             }
-
+            if (stoimost!=0) {                          // почистить код, нужно ли условие  if (stoimost!=0) ?
+                spentTime = (double)city.getDistance()/vehicles[i].getSpeed();
+                itCapacity = vehicles[i].getCapacity();
+                if (spentTime!=0 && spentTime<time) sTime = true;
+                if (itCapacity>weight) capacity = true;
+            }
+            System.out.println(vehicles[i].getName()+" "+Math.round(spentTime)+" - "+Math.round(stoimost));
+            if(sTime==true && capacity==true) {  if(stoimost!=0 && minPrice==0)minPrice = stoimost;}
+            if (sTime == true && capacity == true  && stoimost <= minPrice ) {
+                getTransport = vehicles[i];
+                minPrice = stoimost;
+            }
         }
-        if(isShippingAvaible()) {System.out.println("true+");} else System.out.println("false-");
+        System.out.println();
+        if (getTransport==null){
+            throw new LogisticsGetShippingException("Нет нужного транспорта");
+        }
+        System.out.println(getTransport.getName()+" "+getTransport.getPrice(city));
 
-        System.out.println(vehicle.getName()+" - "+minPrice);
-       return vehicle;
+        return getTransport;
     }
-    public boolean isShippingAvaible () {
 
 
-      // if (city.isOnWater);
-      // if (city.hasAirport);
-        return isRepairing();
-       // City.getDistance();   // static
-       // System.out.println(vehicles[0].getClass().equals(Ship.class)); //equals
-
- }
-
+    private boolean isShippingAvailable() {
+        boolean isAvailable;
+        if(isRepairing())
+        {
+            // System.out.println("Не Доступен");
+            isAvailable = false;
+        }
+        else
+        {
+            // System.out.println("Доступен");
+            isAvailable = true;
+        }
+        return isAvailable;
+    }
 
     @Override
     public void startRepair() {
-        startRepairVehicles[0] = vehicles[0];
+        String[] repair = {"Танкер"};
+        String[] isRepair = new String[repair.length];
+        String isTransport = "";
+        for (int i=0; i< repair.length; i++)
+        {
+            if (repair[i] != null) isRepair[i] = repair[i];
+            if(isRepair[i] == getVehicle.getName()) isTransport = getVehicle.getName(); // getIsRepairing = getVehicle.getName()
+        }
+        getIsRepairing = isTransport; // проверить если несколько на ремонте
     }
+
     @Override
     public void finishRepair() {
-//finishRepairVehicles[0] = vehicles[1];
+
     }
 
     @Override
     public boolean isRepairing() {
+        boolean repairValue ;
         startRepair();
-        finishRepair();
-        boolean start = false;
-        boolean finish = false;
-        boolean isRepairing = false;
-        for (int i=0; i< startRepairVehicles.length; i++)
-        {
-            if(startRepairVehicles[i] != null) { start = true;}
-        }
+        if(getIsRepairing == getVehicle.getName()) { repairValue = true;} //на ремонте
+        else repairValue = false;
 
-        for (int i=0; i< finishRepairVehicles.length; i++)
-        {
-            if(finishRepairVehicles[i] != null) { finish = true;}
-        }
-for (int i=0; i< vehicles.length; i++){
-    if (startRepairVehicles[i]==finishRepairVehicles[i]&&startRepairVehicles[i]!=null && finishRepairVehicles[i]!= null) {
-        isRepairing = false;
-    }
-}
-
-        if(finish == true && finish != start) { isRepairing = true;}
-
-        return isRepairing;
+        return repairValue;
     }
 
 }
-
-
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+LogisticsGetShippingException.java
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+package org.example;
 
+public class LogisticsGetShippingException extends Exception{
+public LogisticsGetShippingException(String message) {
+super(message);
+}
+}
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Repairable.java
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 package org.example;
 
