@@ -4,9 +4,9 @@ public class App
 {
     public static void main( String[] args ) throws Exception
     {
-        City Spb = new City("Санкт-Петербург", 98, true, true);
-        City Murmansk = new City("Мурманск",1400,true, false);
-        City Tver = new City("Тверь", 540, false, false);
+        City Spb = new City("Санкт-Петербург", 120, true, true);
+        City Murmansk = new City("Мурманск",1400,false, true);
+        City Tver = new City("Тверь", 540, false, true);
         City myCity = new City("Город",540);
         City Mosсow = new City("Москва", 800, true, true);
 
@@ -27,19 +27,8 @@ public class App
 
 
         TransportFactory factory = new TransportFactory();
-        Transport createTransport = factory.getTransport(Mosсow,1700,3);
-
-
-
-
-
-
-
-
-
-
+        Transport transport = factory.getTransport(Spb,190700,4);
 
     }
-
 
 }
