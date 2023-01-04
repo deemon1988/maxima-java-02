@@ -12,7 +12,21 @@ public class Ship extends Transport {
     }
 
 
+    @Override
+    public void startRepair() {
+        System.out.println("Корабль на ремонте");
+    }
 
+    @Override
+    public void finishRepair() {
+        System.out.println("Корабль доступен");
+    }
+
+    @Override
+    public boolean isRepairing() {
+
+        return true;
+    }
 }
 
 

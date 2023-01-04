@@ -1,6 +1,6 @@
 package org.example;
 
-public class Logistics implements Repairable{
+public class Logistics {
     Transport[] vehicles;
     public Logistics(Transport... vehicles) {
         this.vehicles = vehicles;
@@ -14,94 +14,49 @@ public class Logistics implements Repairable{
         this.vehicles = vehicles;
     }
 
-    String getIsRepairing = "";
-    Transport getVehicle;
-    Transport getTransport;
 
+    private Transport getVehicle;
 
 
     public Transport getShipping(City city, int weight, int time) throws Exception{
-        float stoimost=0;
-        float minPrice=0 ;
-        getVehicle = vehicles[0];
-        float[] getPrices;
-        getPrices = new float[vehicles.length];
 
-        for (int i = 0; i < vehicles.length; i++) {
-            double spentTime=0;
-            int itCapacity=0;
-            boolean capacity = false;
-            boolean sTime = false;
-
-            getVehicle = vehicles[i];
-            if (isShippingAvailable()) {
-                stoimost = vehicles[i].getPrice(city);
-                getPrices[i]=stoimost;      // массив стоимости доставки
-            }
-            if (stoimost!=0) {                          // почистить код, нужно ли условие  if (stoimost!=0) ?
-                spentTime = (double)city.getDistance()/vehicles[i].getSpeed();
-                itCapacity = vehicles[i].getCapacity();
-                if (spentTime!=0 && spentTime<time) sTime = true;
-                if (itCapacity>weight) capacity = true;
-            }
-            System.out.println(vehicles[i].getName()+" "+Math.round(spentTime)+" - "+Math.round(stoimost));
-            if(sTime==true && capacity==true) {  if(stoimost!=0 && minPrice==0)minPrice = stoimost;}
-            if (sTime == true && capacity == true  && stoimost <= minPrice ) {
-                getTransport = vehicles[i];
-                minPrice = stoimost;
-            }
+        for (Transport transport: vehicles) {
+            isShippingAvailable(transport, city, weight, time);
         }
-        System.out.println();
-        if (getTransport==null){
-            throw new LogisticsGetShippingException("Нет нужного транспорта");
-        }
-        System.out.println(getTransport.getName()+" "+getTransport.getPrice(city));
+        System.out.println(getVehicle.getName());
+        if (getVehicle.isRepairing()) { getVehicle.startRepair(); return null; }
 
-        return getTransport;
+        getVehicle.finishRepair();
+        System.out.println(getVehicle.getName());
+
+        return getVehicle;
     }
 
 
-    private boolean isShippingAvailable() {
-        boolean isAvailable;
-        if(isRepairing())
+    private void isShippingAvailable(Transport transport, City city, int weight, int time) {
+        float minDeliveryPrice=vehicles[0].getPrice(city) ;
+        float deliveryPrice ;
+        int deliveryTime;
+        for (Transport transport1: vehicles)
         {
-            // System.out.println("Не Доступен");
-            isAvailable = false;
+            deliveryPrice = transport1.getPrice(city);
+            deliveryTime = city.getDistance() / transport1.getSpeed();
+            if (minDeliveryPrice >= deliveryPrice && deliveryPrice!=0) {                        // проверка по мин. стоиомости
+                if(deliveryTime <= time && transport1.getCapacity() > weight) {                // проверка по параметрам
+                    getVehicle = transport1;
+                    minDeliveryPrice = deliveryPrice;
+                }
+            }
+            else if(deliveryTime <= time && transport1.getCapacity() > weight) {
+                if(getVehicle==null&&transport1.getPrice(city)!=0) {  getVehicle = transport1;}
+                else if(getVehicle!=null) {
+                    if(getVehicle.getPrice(city)>deliveryPrice&&deliveryPrice!=0)
+                    { getVehicle = transport1;}
+                }
+
+            }
         }
-        else
-        {
-            // System.out.println("Доступен");
-            isAvailable = true;
-        }
-        return isAvailable;
-    }
 
-    @Override
-    public void startRepair() {
-        String[] repair = {"Танкер"};
-        String[] isRepair = new String[repair.length];
-        String isTransport = "";
-        for (int i=0; i< repair.length; i++)
-        {
-            if (repair[i] != null) isRepair[i] = repair[i];
-            if(isRepair[i] == getVehicle.getName()) isTransport = getVehicle.getName(); // getIsRepairing = getVehicle.getName()
-        }
-        getIsRepairing = isTransport; // если несколько на ремонте куда записываются ?
-    }
-
-    @Override
-    public void finishRepair() {
-
-    }
-
-    @Override
-    public boolean isRepairing() {
-        boolean repairValue ;
-        startRepair();
-        if(getIsRepairing == getVehicle.getName()) { repairValue = true;} //на ремонте
-        else repairValue = false;
-
-        return repairValue;
     }
 
 }
