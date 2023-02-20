@@ -1,33 +1,29 @@
 package org.example;
 
-public class App
-{
-    public static void main( String[] args ) throws Exception
-    {
+public class App {
+    public static void main(String[] args) {
         City Spb = new City("Санкт-Петербург", 120, true, true);
-        City Murmansk = new City("Мурманск",1400,false, true);
+        City Murmansk = new City("Мурманск", 1400, false, true);
         City Tver = new City("Тверь", 540, false, true);
-        City myCity = new City("Город",540);
+        City myCity = new City("Город", 540);
         City Mosсow = new City("Москва", 800, true, true);
 
-        Truck trailer_truck = new Truck("Грузовик с полуприцепом", 44000, 120, 150.41 );
-        Ship tanker = new Ship("Танкер",18159000, 27, 300.82);
-        Plane aircraft = new Plane("Самолёт",120000, 800, 600.68);
-        Ship kater = new Ship("Катер",1815, 90, 100.82);
+        Truck trailerTruck = new Truck("Грузовик с полуприцепом", 24000, 120, 150.41);
+        Truck roadTrain = new Truck("Автопоезд", 44000, 100, 180.41);
+        Ship tanker = new Ship("Танкер", 18159000, 27, 300.82);
+        Plane aircraft = new Plane("Самолёт", 120000, 800, 600.68);
+        Ship kater = new Ship("Катер", 1815, 90, 100.82);
 
 
-         Logistics  logistics = new Logistics(tanker, trailer_truck, kater, aircraft,trailer_truck);
-
-            try{ logistics.getShipping(Mosсow,1900,6);}
-            catch (LogisticsGetShippingException ex) {
-                System.out.println("Нет нужного транспорта");
-            }
-
-            System.out.println();
+        Logistics logistics = new Logistics(tanker, roadTrain, kater, aircraft, trailerTruck);
+        logistics.getShipping(Mosсow, 1900, 8);
 
 
-       /* TransportFactory factory = new TransportFactory();
-        Transport transport = factory.getTransport(Spb,190700,4);*/
+        System.out.println();
+
+        TransportFactory factory = new TransportFactory();
+        Transport transport = factory.getTransport(Murmansk, 190700, 1);
+
 
     }
 

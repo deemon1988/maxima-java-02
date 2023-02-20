@@ -1,7 +1,11 @@
 package org.example;
 
+import org.example.City;
+import org.example.Transport;
+
 public class Logistics {
-    Transport[] vehicles;
+    private Transport[] vehicles;
+
     public Logistics(Transport... vehicles) {
         this.vehicles = vehicles;
     }
@@ -15,52 +19,49 @@ public class Logistics {
     }
 
 
-    private Transport getVehicle;
-
-
-    public Transport getShipping(City city, int weight, int time) throws Exception{
-
-        for (Transport transport: vehicles) {
-            isShippingAvailable(transport, city, weight, time);
+    public Transport getShipping(City city, int weight, int time) {
+        Transport vehicle = null;
+        for (Transport transport : getVehicles()) {
+            if (isShippingAvailable(transport, city, weight, time)) {
+                if (vehicle == null) {
+                    vehicle = transport;
+                } else {
+                    if ((transport.getPrice(city)) < vehicle.getPrice(city)) {
+                        vehicle = transport;
+                    }
+                }
+            }
         }
-        System.out.println(getVehicle.getName());
-        if (getVehicle.isRepairing()) { getVehicle.startRepair(); return null; }
+        System.out.println(vehicle.getName());
+        return vehicle;
 
-        getVehicle.finishRepair();
-        System.out.println(getVehicle.getName());
-
-        return getVehicle;
     }
 
+    /* public Transport getShipping(City city, int weight, int time)  {
+          Transport result = new NullTransport();
+          for (Transport vehicle: getVehicles()) {
+              if (isShippingAvailable(vehicle, city, weight, time) && vehicle.getPrice(city) < result.getPrice(city)){
+                  result = vehicle;
+              }
+          }
+          return  result instanceof NullTransport ? null : result;
+      }*/
+    private boolean isShippingAvailable(Transport transport, City city, int weight, int time) {
+      /* boolean isReachable = transport.getPrice(city)>0;
+       boolean isNotOverLoaded = transport.getCapacity()>=weight;
+        boolean canShipInTime = city.getDistance()/ transport.getSpeed()<=time;
 
-    private void isShippingAvailable(Transport transport, City city, int weight, int time) {
-        float minDeliveryPrice=vehicles[0].getPrice(city) ;
-        float deliveryPrice ;
-        int deliveryTime;
-        for (Transport transport1: vehicles)
-        {
-            deliveryPrice = transport1.getPrice(city);
-            deliveryTime = city.getDistance() / transport1.getSpeed();
-            if (minDeliveryPrice >= deliveryPrice && deliveryPrice!=0) {                        // проверка по мин. стоиомости
-                if(deliveryTime <= time && transport1.getCapacity() > weight) {                // проверка по параметрам
-                    getVehicle = transport1;
-                    minDeliveryPrice = deliveryPrice;
-                }
-            }
-            else if(deliveryTime <= time && transport1.getCapacity() > weight) {
-                if(getVehicle==null&&transport1.getPrice(city)!=0) {  getVehicle = transport1;}
-                else if(getVehicle!=null) {
-                    if(getVehicle.getPrice(city)>deliveryPrice&&deliveryPrice!=0)
-                    { getVehicle = transport1;}
-                }
+        return isReachable && isNotOverLoaded && canShipInTime && !transport.isRepairing();*/
 
-            }
+
+        float deliveryIsPossible = transport.getPrice(city);
+        int requiredLoadCapacity = transport.getCapacity();
+        int deliveryOnTime = city.getDistance() / transport.getSpeed();
+
+        if (deliveryIsPossible > 0 && requiredLoadCapacity >= weight && deliveryOnTime <= time && !transport.isRepairing()) {
+            return true;
         }
-
+        return false;
     }
 
 }
-
-
-
-

@@ -6,7 +6,15 @@ abstract class Transport implements Repairable{
     private int capacity;
     private int speed;
     private double costOfKm;
+    private boolean isRepairing;
 
+    public Transport(String name, int capacity, int speed, double costOfKm, boolean isRepairing) {
+        this.name = name;
+        this.capacity = capacity;
+        this.speed = speed;
+        this.costOfKm = costOfKm;
+        this.isRepairing = isRepairing;
+    }
 
     public Transport(String name, int capacity, int speed, double costOfKm) {
         this.name = name;
@@ -50,6 +58,12 @@ abstract class Transport implements Repairable{
     }
 
 
+    @Override
+    public boolean isRepairing() {
+        return isRepairing;
+    }
 
-
+    public void setRepairing(boolean repairing) {
+        isRepairing = repairing;
+    }
 }
